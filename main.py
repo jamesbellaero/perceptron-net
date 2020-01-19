@@ -36,3 +36,58 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,test_size = .1, stratify
 
 
 
+
+class Perceptron:
+    def __init__(self):
+        self.w = none
+        self.b = none
+    def model(self, x):
+        return 1 if (np.dot(self.w,x) >= self.b) else 0
+    def predict(self, x):
+        y = []
+        for x_i in x:
+            result = self.model(x)
+            y.append(result)
+        return np.array(y)
+    def fit(self, x, y, epochs = 1, lr = 1):
+        #TODO: what is x.shape?
+        self.w  = np.ones(x.shape[1])
+        self.b = 0
+        accuracy = {}
+        max_accuracy = 0
+        wt_matrix = []
+        for i in range(epochs):
+            for x_i, y_i in zip(x,y):
+                y_pred = self.model(x)
+                if y == 1 and y_pred == 0:
+                    # lr is learning rate
+                    self.w = self.w + lr * x
+                    self.b = self.b - lr 
+                elif y==0 and y_pred == 1:
+                    self.w = self.w - lr*x
+                    self.b = self.b + lr
+
+                wt_matrx.append(self.w)
+                # TODO: where is accuracy_score from?
+                accuracy[i] = accuracy_score(self.predict(x), y)
+                if(accuracy[i] > max_accuracy):
+                    max_accuracy = accuracy[i]
+                    chkptw = self.w
+                    chkptb = self.b
+            # END INNER FOR LOOP    
+            
+            #save the values
+            self.w = chkptw
+            self.b = chkptb
+            print(max_accuracy)
+            mpl.plot(accuracy.values())
+            mpl.xlabel("Epoch #")
+            mpl.ylabel("Accuracy")
+            mpl.ylim([0,1])
+            mpml.show()
+            
+            #return the weight matrix for all epochs
+            return np.array(wt_matrix)
+
+
+
